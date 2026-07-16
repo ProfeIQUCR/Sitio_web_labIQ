@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Recursos — Laboratorio de Ingeniería Química</title>
+  <meta name="description"
+    content="Portal oficial del Laboratorio de Ingeniería Química. Consulta el catálogo de equipos, descarga formatos de solicitud y conoce los procedimientos para el uso del espacio de laboratorio.">
+  <meta name="theme-color" content="#3B82F6">
+
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       NAVEGACIÓN STICKY
+  ════════════════════════════════════════════════════════════════════════ -->
+  <header class="nav-header" id="nav-header">
+    <nav class="nav-inner container">
+
+      <!-- Logo -->
+      <a href="#inicio" class="nav-logo" aria-label="Inicio — LAB-IQ">
+        <div class="logo-mark">
+          <span class="logo-iq">IQ</span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-name">LABORATORIO DE INGENIERÍA QUÍMICA</span>
+          <span class="logo-sub">Universidad de Costa Rica</span>
+        </div>
+      </a>
+
+      <!-- Links de navegación -->
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="#inicio" class="nav-link" id="nav-inicio">Inicio</a></li>
+        <li><a href="#procedimientos" class="nav-link" id="nav-proc">Procedimientos</a></li>
+        <li><a href="#procesos" class="nav-link" id="nav-procesos">Recursos de apoyo</a></li>
+        <li><a href="#catalogo" class="nav-link" id="nav-cat">Catálogo</a></li>
+        <li><a href="#contacto" class="nav-link" id="nav-contact">Contacto</a></li>
+      </ul>
+
+      <!-- CTA Navegación + Botón Móvil -->
+      <div class="nav-actions">
+        <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECCIÓN 1: HERO
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="inicio" class="section-hero" aria-label="Bienvenida">
+
+      <div class="hero-inner container">
+
+        <!-- Contenido textual -->
+        <div class="hero-content">
+          <span class="hero-tag">Portal Oficial de Recursos</span>
+
+          <h1 class="hero-title">
+            Laboratorio de<br>
+            <span class="hero-highlight">Ingeniería Química</span>
+          </h1>
+
+          <h1 class="hero-title">
+            Universidad de<br>
+            Costa Rica
+          </h1>
+
+          <p class="hero-description">
+            Consulta el catálogo de equipos disponibles, descarga los formatos oficiales de solicitud y conoce los
+            procedimientos para el uso del espacio de laboratorio de la Escuela de Ingeniería.
+          </p>
+          <div class="hero-actions">
+            <a href="#catalogo" class="btn btn-white" id="hero-btn-catalog">Explorar Catálogo</a>
+            <a href="#procedimientos" class="btn btn-outline-white" id="hero-btn-proc">Ver Procedimientos</a>
+          </div>
+
+
+        </div>
+
+        <!-- Composición geométrica decorativa (flat, sin imágenes) -->
+        <div class="hero-graphic" aria-hidden="true">
+          <div class="geo geo-yellow"></div>
+          <div class="geo geo-white"></div>
+          <div class="geo geo-green"></div>
+          <div class="geo geo-dark"></div>
+          <div class="geo geo-blue-light"></div>
+        </div>
+
+      </div>
+
+      <!-- Barra de estadísticas -->
+      <div class="hero-stats" aria-label="Estadísticas del laboratorio">
+        <div class="stat-item">
+          <span class="stat-num" id="stat-total-equipos">—</span>
+          <span class="stat-label">Equipos registrados</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-num" id="stat-total-cats">—</span>
+          <span class="stat-label">Categorías</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Técnicos especializados</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECCIÓN 2: PROCEDIMIENTOS
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="procedimientos" class="section-procedures" aria-label="Procedimientos de solicitud">
+      <div class="container">
+
+        <!-- Encabezado de sección -->
+        <div class="section-header">
+          <span class="section-tag">Solicitudes de Laboratorio</span>
+          <h2 class="section-title">Tipos de solicitudes</h2>
+          <p class="section-subtitle">
+            Selecciona el tipo de solicitud que corresponde a tu actividad. Cada modalidad tiene requisitos y procesos
+            distintos.
+          </p>
+        </div>
+
+        <!-- Grid de 4 tipos de solicitud -->
+        <div class="proc-types-grid" id="proc-types-grid" aria-label="Tipos de solicitud de laboratorio">
+          <!-- Generado por app.js -->
+        </div>
+
+        <!-- Documento oficial (único PDF) -->
+        <div class="proc-doc-wrapper">
+          <div class="proc-doc-header">
+            <div class="docs-header-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="docs-header-title">Documentos Oficiales</h3>
+              <p class="docs-header-sub">En esta sección encontrará un documento general en el que se basan los cuatro
+                tipos de solicitud arriba mencionadas. Asimismo, encontrará las cartas de solicitud para el laboratorio
+                general e instrumental.</p>
+            </div>
+          </div>
+          <div id="docs-grid" aria-label="Documento oficial de solicitudes">
+            <!-- Generado por app.js -->
+          </div>
+
+          <!-- Contenedor del visor de PDF integrado -->
+          <div id="pdf-viewer-container" class="pdf-viewer-container" style="display: none;">
+            <div class="pdf-viewer-header">
+              <span class="pdf-viewer-title">Visor de Documento Oficial</span>
+              <button class="btn btn-outline-primary btn-sm" onclick="togglePdfViewer()" aria-label="Cerrar visor">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.25rem;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Cerrar Visor
+              </button>
+            </div>
+            <iframe id="pdf-iframe" src="" width="100%" height="750px" style="border: none; border-radius: var(--radius-md);"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECCIÓN: PROCESOS EN EL LABORATORIO (TRÁMITES IN SITU)
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="procesos" class="section-procesos" aria-label="Recursos de apoyo">
+      <div class="container">
+
+        <!-- Encabezado de sección -->
+        <div class="section-header">
+          <span class="section-tag">Trámites In Situ</span>
+          <h2 class="section-title">Recursos de apoyo</h2>
+          <p class="section-subtitle">
+            Videoguías paso a paso sobre los procedimientos y gestiones que se deben realizar de manera presencial en las instalaciones del laboratorio.
+          </p>
+        </div>
+
+        <!-- Grid de videos de procesos -->
+        <div class="videos-grid" id="videos-grid" aria-label="Videos explicativos de procesos">
+          <!-- Generado por app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECCIÓN 3: CATÁLOGO DE EQUIPO
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="catalogo" class="section-catalog" aria-label="Catálogo de equipos">
+      <div class="container">
+
+        <!-- Encabezado -->
+        <div class="section-header">
+          <span class="section-tag">Equipamiento</span>
+          <h2 class="section-title">Catálogo de Equipo</h2>
+          <p class="section-subtitle">
+            Fotografías y descripción del equipo disponible en el laboratorio. Usa los filtros para navegar por
+            categoría.
+          </p>
+        </div>
+
+        <!-- Barra de filtros: sticky dentro de la sección -->
+        <div class="catalog-filter-bar-wrapper">
+          <!-- Selector de Laboratorio -->
+          <div class="lab-selector-wrapper">
+            <div class="lab-selector" role="tablist" aria-label="Seleccionar laboratorio">
+              <button class="lab-tab active" data-lab="general" role="tab" aria-selected="true" id="tab-general"
+                onclick="selectLaboratory('general')">
+                Laboratorio General
+              </button>
+              <button class="lab-tab" data-lab="instrumental" role="tab" aria-selected="false" id="tab-instrumental"
+                onclick="selectLaboratory('instrumental')">
+                Laboratorio Instrumental
+              </button>
+            </div>
+          </div>
+
+          <!-- Buscador de equipos -->
+          <div class="catalog-search-wrapper">
+            <div class="search-input-container">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="catalog-search" placeholder="Buscar equipo por nombre o marca..." aria-label="Buscar equipo por nombre o marca">
+              <button id="search-clear-btn" aria-label="Limpiar búsqueda" hidden>&times;</button>
+            </div>
+          </div>
+
+          <div class="catalog-filter-bar" id="catalog-filter-bar" role="group" aria-label="Filtros por categoría">
+            <!-- Chips de categorías generados dinámicamente por app.js -->
+          </div>
+        </div>
+
+        <!-- Contador de resultados -->
+        <div class="catalog-info-bar">
+          <span class="catalog-count" id="catalog-count">— equipos</span>
+          <span class="catalog-info-note">Las imágenes se cargan progresivamente</span>
+        </div>
+
+        <!-- Grid de tarjetas -->
+        <div class="catalog-grid" id="catalog-grid" aria-label="Equipos del laboratorio">
+          <!-- Generado por app.js -->
+        </div>
+
+        <!-- Botón para paginación (Cargar más) -->
+        <div id="catalog-load-more-container" class="catalog-load-more-container" style="display: none;">
+          <button id="btn-load-more" class="btn btn-outline-primary">
+            Cargar más equipos
+          </button>
+        </div>
+
+        <!-- Estado sin resultados -->
+        <div class="catalog-empty-state" id="catalog-empty" hidden>
+          <div class="empty-state-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </div>
+          <h3 class="empty-state-title">No se encontraron equipos</h3>
+          <p class="empty-state-desc">Prueba cambiando los filtros de categoría o ajustando los términos de búsqueda.</p>
+          <button class="btn btn-outline-primary btn-sm" id="btn-reset-filters">Restablecer filtros</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECCIÓN 4: CONTACTO Y HORARIOS
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="contacto" class="section-contact" aria-label="Contacto y horarios">
+      <div class="container">
+
+        <!-- Encabezado -->
+        <div class="section-header section-header--dark">
+          <span class="section-tag section-tag--white">Directorio</span>
+          <h2 class="section-title section-title--white">Contacto y Horarios</h2>
+          <p class="section-subtitle section-subtitle--white">
+            Conoce al personal del laboratorio, los horarios de atención y envíanos tus quejas o sugerencias.
+          </p>
+        </div>
+
+        <!-- Layout: Columna Personal + Columna Horario/Form -->
+        <div class="contact-layout">
+
+          <!-- Personal -->
+          <div class="contact-staff-section">
+            <h3 class="contact-section-label">Personal</h3>
+            <div class="staff-grid" id="staff-grid" aria-label="Directorio de personal">
+              <!-- Generado por app.js -->
+            </div>
+          </div>
+
+          <!-- Horarios + Formulario -->
+          <div class="contact-right-section">
+
+            <!-- Horarios -->
+            <div class="schedule-block">
+              <h3 class="contact-section-label">Horarios de Atención</h3>
+              <div class="schedule-list" id="schedule-list" aria-label="Horarios del laboratorio">
+                <!-- Generado por app.js -->
+              </div>
+            </div>
+
+            <!-- Formulario de quejas y sugerencias -->
+            <div class="form-block">
+              <h3 class="contact-section-label">Quejas y Sugerencias</h3>
+              <p class="form-block-sub">¿Tienes una sugerencia de mejora o necesitas reportar un incidente sobre el
+                laboratorio? Escríbenos directamente.</p>
+
+              <!--
+                FORMULARIO CON FORMSUBMIT.CO
+                ══════════════════════════════════════════════════════════════
+                FormSubmit envía el formulario a tu correo sin necesidad de
+                servidor backend. Pasos:
+                  1. Cambia CONTACTO.emailDestino en data.js con tu correo real.
+                  2. La primera vez que se envíe el formulario, FormSubmit
+                     enviará un correo de activación a esa dirección.
+                  3. Una vez activado, todos los envíos llegan automáticamente.
+                ══════════════════════════════════════════════════════════════
+              -->
+              <form id="contact-form" class="contact-form" method="POST" target="_blank">
+                <!-- El action se configura dinámicamente desde data.js via app.js -->
+                <input type="hidden" name="_subject" value="Nueva consulta — Portal LAB-IQ">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_captcha" value="false">
+
+                <div class="form-group">
+                  <label class="form-label" for="form-nombre">Nombre completo</label>
+                  <input type="text" id="form-nombre" name="name" class="form-input"
+                    placeholder="Ej. María García López" required autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="form-email">Correo electrónico institucional</label>
+                  <input type="email" id="form-email" name="email" class="form-input"
+                    placeholder="Ej. maría.garcia@ucr.ac.cr" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="form-tipo">Tipo de mensaje</label>
+                  <select id="form-tipo" name="tipo" class="form-input form-select" required>
+                    <option value="" disabled selected>Selecciona una opción...</option>
+                    <option value="Queja">Queja</option>
+                    <option value="Sugerencia">Sugerencia</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="form-mensaje">Mensaje</label>
+                  <textarea id="form-mensaje" name="message" class="form-input form-textarea"
+                    placeholder="Describe detalladamente tu queja o sugerencia..." rows="5" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full" id="form-submit-btn">
+                  Enviar mensaje
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>© <span id="footer-year"></span> Laboratorio de Ingeniería Química. Todos los derechos reservados.</p>
+      <p>Portal diseñado para la comunidad estudiantil y personal de investigación.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+
+  <!-- Botón Volver Arriba -->
+  <button id="back-to-top" class="back-to-top-btn" aria-label="Volver al inicio">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <!-- Modal para reproductor de video de Canva -->
+  <div id="video-modal" class="video-modal" style="display: none;" aria-hidden="true" role="dialog">
+    <div class="video-modal-overlay" onclick="closeVideoModal()"></div>
+    <div class="video-modal-content">
+      <div class="video-modal-header">
+        <h3 id="video-modal-title" class="video-modal-title">Título del Video</h3>
+        <button class="video-modal-close" onclick="closeVideoModal()" aria-label="Cerrar reproductor">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="video-modal-body">
+        <iframe id="video-iframe" src="" allowfullscreen allow="autoplay"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para visualizar imágenes ampliadas (Zoom) -->
+  <div id="image-modal" class="image-modal" style="display: none;" aria-hidden="true" role="dialog">
+    <div class="image-modal-overlay" onclick="closeImageModal()"></div>
+    <div class="image-modal-content">
+      <button class="image-modal-close" onclick="closeImageModal()" aria-label="Cerrar imagen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="image-modal-body">
+        <img id="modal-image" src="" alt="Equipo ampliado">
+        <div id="image-modal-caption" class="image-modal-caption">Nombre del equipo</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
