@@ -516,6 +516,14 @@ select {
   color: var(--clr-fg);
 }
 
+.logo-name-full {
+  display: inline;
+}
+
+.logo-name-short {
+  display: none;
+}
+
 .logo-sub {
   font-size: 0.7rem;
   font-weight: var(--fw-medium);
@@ -552,6 +560,8 @@ select {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .nav-cta {
@@ -2474,12 +2484,18 @@ select {
 
 /* Móvil (~480px) */
 @media (max-width: 480px) {
+  .logo-name-full {
+    display: none !important;
+  }
+
+  .logo-name-short {
+    display: inline !important;
+  }
+
   .logo-name {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     line-height: 1.1;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .logo-sub {
