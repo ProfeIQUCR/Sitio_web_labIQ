@@ -25,15 +25,56 @@ const ICONS = {
 // ─── INICIALIZACIÓN ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initNav();
+  initDarkMode();
+  initModalKeyboard();
   renderHeroStats();
   renderProcedures();
   renderCatalog();
   selectLaboratory('general');
   initCatalogSearch();
+  initReactivos();
   renderContact();
   initContactForm();
   setFooterYear();
 });
+
+// ─── MODO OSCURO ──────────────────────────────────────────────────────────────────────────
+function initDarkMode() {
+  const toggle = document.getElementById('dark-mode-toggle');
+  if (!toggle) return;
+
+  // Leer preferencia guardada o la del sistema operativo
+  const saved = localStorage.getItem('lab-iq-theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+
+  toggle.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('lab-iq-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('lab-iq-theme', 'dark');
+    }
+  });
+}
+
+// ─── MODALES: CIERRE CON TECLA ESCAPE ──────────────────────────────────────────────────────
+function initModalKeyboard() {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const videoModal = document.getElementById('video-modal');
+      const imageModal = document.getElementById('image-modal');
+      if (videoModal && videoModal.style.display !== 'none') {
+        closeVideoModal();
+      } else if (imageModal && imageModal.style.display !== 'none') {
+        closeImageModal();
+      }
+    }
+  });
+}
 
 // ─── NAV: SCROLL BEHAVIOR + MENÚ MÓVIL ──────────────────────────────────────
 function initNav() {
@@ -106,11 +147,17 @@ function initActiveNavLinks() {
 
 // ─── HERO: ESTADÍSTICAS DINÁMICAS ────────────────────────────────────────────
 function renderHeroStats() {
-  const totalEquipos = document.getElementById('stat-total-equipos');
-  const totalCats    = document.getElementById('stat-total-cats');
+  const totalEquipos   = document.getElementById('stat-total-equipos');
+  const totalReactivos = document.getElementById('stat-total-reactivos');
+  const totalCats      = document.getElementById('stat-total-cats');
 
-  if (totalEquipos) totalEquipos.textContent = EQUIPOS.length;
-  if (totalCats)    totalCats.textContent    = CATEGORIAS.length;
+  if (totalEquipos)   totalEquipos.textContent = EQUIPOS.length;
+  if (totalCats)      totalCats.textContent    = CATEGORIAS.length;
+  if (totalReactivos && typeof listadoReactivosActual !== 'undefined') {
+    totalReactivos.textContent = listadoReactivosActual.length;
+  } else if (totalReactivos && typeof REACTIVOS !== 'undefined') {
+    totalReactivos.textContent = REACTIVOS.length;
+  }
 }
 
 // ─── PROCEDIMIENTOS ──────────────────────────────────────────────────────────
@@ -870,3 +917,288 @@ function setFooterYear() {
   const el = document.getElementById('footer-year');
   if (el) el.textContent = new Date().getFullYear();
 }
+
+// ─── MÓDULO INVENTARIO DE REACTIVOS ──────────────────────────────────────────
+let listadoReactivosActual = [];
+let reactivosSearchQuery = '';
+
+function initReactivos() {
+  listadoReactivosActual = (typeof REACTIVOS !== 'undefined' && Array.isArray(REACTIVOS)) ? [...REACTIVOS] : [];
+  
+  // 1. Verificar si hay sincronización en vivo mediante URL de Google Sheets
+  if (typeof GOOGLE_SHEET_CSV_URL !== 'undefined' && GOOGLE_SHEET_CSV_URL && GOOGLE_SHEET_CSV_URL.trim() !== '') {
+    cargarReactivosDesdeGoogleSheets(GOOGLE_SHEET_CSV_URL.trim());
+  } else {
+    actualizarVistaReactivos();
+  }
+
+  // 2. Event Listeners del Buscador
+  const searchInput = document.getElementById('reactivos-search');
+  const clearBtn = document.getElementById('reactivos-clear-btn');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      reactivosSearchQuery = e.target.value;
+      if (clearBtn) clearBtn.hidden = (reactivosSearchQuery.trim() === '');
+      filterReactivos();
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+      }
+      reactivosSearchQuery = '';
+      clearBtn.hidden = true;
+      filterReactivos();
+    });
+  }
+}
+
+async function cargarReactivosDesdeGoogleSheets(url) {
+  const syncStatus = document.getElementById('reactivos-sync-status');
+  const countDisplay = document.getElementById('reactivos-count-display');
+  try {
+    if (syncStatus) {
+      syncStatus.innerHTML = `<span class="sync-dot" style="background:#F59E0B;"></span> Sincronizando...`;
+    }
+    // Mostrar indicador de carga
+    if (countDisplay) {
+      countDisplay.innerHTML = `<span class="reactivos-loading-spinner"></span> Cargando inventario...`;
+    }
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+    const csvText = await response.text();
+    const reactivosParseados = parsearCSVReactivos(csvText);
+    
+    if (reactivosParseados && reactivosParseados.length > 0) {
+      listadoReactivosActual = reactivosParseados;
+      if (syncStatus) {
+        syncStatus.innerHTML = `<span class="sync-dot"></span> Sincronizado en vivo`;
+      }
+    } else {
+      throw new Error("No se encontraron registros válidos en el CSV.");
+    }
+  } catch (err) {
+    console.warn("⚠️ No se pudo sincronizar Google Sheets en vivo, usando datos locales:", err);
+    if (syncStatus) {
+      syncStatus.innerHTML = `<span class="sync-dot" style="background:#6B7280;"></span> Datos locales (offline)`;
+    }
+  } finally {
+    actualizarVistaReactivos();
+  }
+}
+
+function parsearCSVReactivos(csvText) {
+  const lineas = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
+  if (lineas.length < 2) return [];
+
+  // Expresión regular básica para procesar CSV respetando comillas
+  const parseRow = (text) => {
+    const res = [];
+    let p = '', inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (c === '"' && (i === 0 || text[i-1] !== '\\')) {
+        inQuotes = !inQuotes;
+      } else if (c === ',' && !inQuotes) {
+        res.push(p.trim().replace(/^"|"$/g, ''));
+        p = '';
+      } else {
+        p += c;
+      }
+    }
+    res.push(p.trim().replace(/^"|"$/g, ''));
+    return res;
+  };
+
+  const headers = parseRow(lineas[0]).map(h => h.toLowerCase());
+  let idxNombre = headers.findIndex(h => h.includes('nombre') || h.includes('reactivo') || h.includes('descrip'));
+  let idxUbicacion = headers.findIndex(h => h.includes('ubicacion') || h.includes('ubicación') || h.includes('estante') || h.includes('posicion') || h.includes('posición'));
+  let idxPertenece = headers.findIndex(h => h.includes('pertenece') || h.includes('pertnenece') || h.includes('propietario') || h.includes('investigador'));
+
+  if (idxNombre === -1) idxNombre = 0;
+  if (idxUbicacion === -1) idxUbicacion = (headers.length > 1) ? 1 : 0;
+
+  const reactivos = [];
+  for (let i = 1; i < lineas.length; i++) {
+    const row = parseRow(lineas[i]);
+    if (row.length <= Math.max(idxNombre, idxUbicacion)) continue;
+
+    const nombre = row[idxNombre] ? row[idxNombre].trim() : '';
+    let ubicacion = row[idxUbicacion] ? row[idxUbicacion].trim() : 'sin identificar';
+    let pertenece = (idxPertenece !== -1 && row[idxPertenece]) ? row[idxPertenece].trim() : 'EIQ';
+
+    const nombreLower = nombre.toLowerCase();
+    const esInstruccion = !nombre || 
+      nombreLower.includes('se debe incluir') || 
+      nombreLower.includes('colocar el estante') || 
+      nombreLower === 'nombre' || 
+      nombreLower === 'nombre del reactivo';
+
+    if (!esInstruccion) {
+      if (!ubicacion) ubicacion = 'sin identificar';
+      if (!pertenece) pertenece = 'EIQ';
+      reactivos.push({ nombre, ubicacion, pertenece });
+    }
+  }
+
+  return reactivos;
+}
+
+function actualizarVistaReactivos() {
+  const statReactivos = document.getElementById('stat-total-reactivos');
+  if (statReactivos) {
+    statReactivos.textContent = listadoReactivosActual.length;
+  }
+  filterReactivos();
+}
+
+function renderReactivoRow(r, queryClean) {
+  const tr = document.createElement('tr');
+
+  // Resaltar coincidencia en nombre
+  const nombreHtml = resaltarCoincidencia(r.nombre, queryClean);
+
+  // Determinar si requiere permiso especial por pertenecer a un investigador que no sea EIQ
+  const perteneceTrim = (r.pertenece || '').trim();
+  const perteneceLower = perteneceTrim.toLowerCase();
+  const requierePermiso = perteneceTrim !== '' && perteneceLower !== 'eiq';
+
+  let avisoPermisoHtml = '';
+  if (requierePermiso) {
+    avisoPermisoHtml = `
+      <div class="badge-restriction-warning">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Para usar este reactivo requiere el permiso adicional de la persona investigadora correspondiente. Consultar en la ventanilla de atención.</span>
+      </div>`;
+  }
+
+  // Formatear badge de ubicación según la nomenclatura M#E#-# o etiquetas sin identificar/desconocido
+  const ubiLower = r.ubicacion.toLowerCase().trim();
+  let ubicacionHtml = '';
+
+  if (ubiLower === 'sin identificar' || ubiLower === 'desconocido' || ubiLower === '') {
+    const labelText = ubiLower === 'desconocido' ? 'Desconocido' : 'Sin identificar';
+    ubicacionHtml = `
+      <span class="badge-unknown">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        ${labelText}
+      </span>`;
+  } else {
+    const ubiHighlighted = resaltarCoincidencia(r.ubicacion, queryClean);
+    ubicacionHtml = `
+      <span class="badge-location">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        ${ubiHighlighted}
+      </span>`;
+  }
+
+  tr.innerHTML = `
+    <td style="font-weight: 500;">
+      <div>${nombreHtml}</div>
+      ${avisoPermisoHtml}
+    </td>
+    <td>${ubicacionHtml}</td>
+  `;
+
+  return tr;
+}
+
+function filterReactivos() {
+  const tbody = document.getElementById('reactivos-tbody');
+  const countDisplay = document.getElementById('reactivos-count-display');
+  const emptyState = document.getElementById('reactivos-empty');
+  const tableWrapper = document.getElementById('reactivos-table-wrapper');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+
+  const queryClean = reactivosSearchQuery.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+  // Caso 1: Búsqueda vacía (No desplegar ninguno por defecto)
+  if (!queryClean) {
+    if (tableWrapper) tableWrapper.style.display = 'none';
+    if (emptyState) emptyState.hidden = true;
+    if (countDisplay) countDisplay.textContent = '';
+    return;
+  }
+
+  // Caso 2: El usuario está escribiendo -> filtrar y popular en tiempo real
+
+  const filtrados = listadoReactivosActual.filter(r => {
+    const nombreClean = r.nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return nombreClean.includes(queryClean);
+  });
+
+  if (countDisplay) {
+    countDisplay.textContent = `Mostrando ${filtrados.length} coincidencia(s) de ${listadoReactivosActual.length} reactivos`;
+  }
+
+  const REACTIVOS_LIMIT = 50;
+  const mostrarTodos = filtrados.length <= REACTIVOS_LIMIT;
+  const aRenderizar = mostrarTodos ? filtrados : filtrados.slice(0, REACTIVOS_LIMIT);
+
+  if (filtrados.length > 0) {
+    if (tableWrapper) tableWrapper.style.display = 'block';
+    if (emptyState) emptyState.hidden = true;
+  } else {
+    if (tableWrapper) tableWrapper.style.display = 'none';
+    if (emptyState) emptyState.hidden = false;
+  }
+
+  aRenderizar.forEach(r => {
+    tbody.appendChild(renderReactivoRow(r, queryClean));
+  });
+
+  // Botón "Mostrar todos" si hay más de 50 resultados
+  if (!mostrarTodos) {
+    const trMore = document.createElement('tr');
+    trMore.className = 'reactivos-show-all-row';
+    trMore.innerHTML = `
+      <td colspan="2" style="text-align: center; padding: 1rem;">
+        <button class="btn btn-outline-primary btn-sm" id="btn-reactivos-show-all">
+          Mostrar los ${filtrados.length} resultados
+        </button>
+      </td>
+    `;
+    tbody.appendChild(trMore);
+
+    document.getElementById('btn-reactivos-show-all').addEventListener('click', () => {
+      // Renderizar todos sin límite
+      trMore.remove();
+      filtrados.slice(REACTIVOS_LIMIT).forEach(r => {
+        tbody.appendChild(renderReactivoRow(r, queryClean));
+      });
+      if (countDisplay) {
+        countDisplay.textContent = `Mostrando ${filtrados.length} de ${filtrados.length} coincidencia(s)`;
+      }
+    });
+  }
+}
+
+function resaltarCoincidencia(texto, busquedaClean) {
+  if (!busquedaClean) return escapeHtml(texto);
+  const textoClean = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const index = textoClean.indexOf(busquedaClean);
+
+  if (index === -1) return escapeHtml(texto);
+
+  const originalMatch = texto.substring(index, index + busquedaClean.length);
+  const start = escapeHtml(texto.substring(0, index));
+  const end = escapeHtml(texto.substring(index + busquedaClean.length));
+
+  return `${start}<mark class="highlight-match">${escapeHtml(originalMatch)}</mark>${end}`;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+

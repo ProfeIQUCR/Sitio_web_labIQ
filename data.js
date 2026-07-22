@@ -92,8 +92,8 @@ const EQUIPOS = [
   { id: "AT-001", nombre: "Analizador termogravimétrico (TGA/DSC) ", categoria: ["analisis-termico", "instrumentacion"], img: "assets/img/equipos/term-analizador-termogravimetrico-tgadsc.webp" },
   { id: "CG-007", nombre: "HPLC (Thermo Scientific)", categoria: ["cromatografia", "instrumentacion"], img: "assets/img/equipos/crom-hplc-thermo-scientific.webp" },
   { id: "IN-008", nombre: "Analizador de tamaño de partícula (Z-sizer) y potencial Z (Malvern Analytical)", categoria: "instrumentacion", img: "assets/img/equipos/inst-analizador-de-tamano-de-particula-z-sizer-y-potencial-z-malvern-analytical.webp" },
-      { id: "ES-005", nombre: "Espectoscopio UV-Vis con fibra óptica (Thermo Scientific)", categoria: ["espectroscopia", "instrumentacion"], img: "assets/img/equipos/espec-espectoscopio-uv-vis-con-fibra-optica-thermo-scientific.webp" },
-      { id: "ES-006", nombre: "Espectoscopio UV-Vis (Thermo Scientific)", categoria: ["espectroscopia", "instrumentacion"], img: "assets/img/equipos/espec-espectoscopio-uv-vis-thermo-scientific.webp" },
+      { id: "ES-005", nombre: "Espectroscopio UV-Vis con fibra óptica (Thermo Scientific)", categoria: ["espectroscopia", "instrumentacion"], img: "assets/img/equipos/espec-espectoscopio-uv-vis-con-fibra-optica-thermo-scientific.webp" },
+      { id: "ES-006", nombre: "Espectroscopio UV-Vis (Thermo Scientific)", categoria: ["espectroscopia", "instrumentacion"], img: "assets/img/equipos/espec-espectoscopio-uv-vis-thermo-scientific.webp" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -115,7 +115,7 @@ const PROCEDIMIENTOS = {
       id: "general",
       icono: "clipboard",
       titulo: "Solicitud de Laboratorio General",
-      descripcion: "Procedimiento estándar para el uso del laboratorio durante el horario regular de atención. Aplica para proyectos finales de curso, asistencia aproyectos de investigación, desarrollo de TFG o TFIA o recibir capacitación.",
+      descripcion: "Procedimiento estándar para el uso del laboratorio durante el horario regular de atención. Aplica para proyectos finales de curso, asistencia a proyectos de investigación, desarrollo de TFG o TFIA o recibir capacitación.",
       documentoId: "doc-solicitudes-generales",
       // Sub-pasos de este tipo de solicitud
       pasos: [
@@ -131,7 +131,6 @@ const PROCEDIMIENTOS = {
       icono: "clock",
       titulo: "Solicitud de Uso en Horas Fuera de Atención",
       descripcion: "Para el uso del laboratorio fuera del horario regular de servicio. Se divide en dos modalidades según el tipo de actividad que se realizará.",
-      videoId: "fuera-horario-video",
       // Este tipo tiene sub-modalidades
       subtipos: [
         {
