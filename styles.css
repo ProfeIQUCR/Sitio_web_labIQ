@@ -2348,26 +2348,41 @@ select {
   }
 
   .container {
-    padding-inline: 1.25rem;
+    padding-inline: 1rem;
   }
 
-  /* Nav móvil */
+  .nav-inner {
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .nav-logo {
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  /* Nav móvil optimizado para iOS Safari */
   .nav-links {
     position: fixed;
     top: var(--nav-h);
     left: 0;
     right: 0;
+    bottom: 0;
+    height: calc(100dvh - var(--nav-h));
+    max-height: calc(100vh - var(--nav-h));
     background: var(--clr-white);
-    border-bottom: 2px solid var(--clr-border);
+    border-bottom: none;
     flex-direction: column;
     align-items: stretch;
-    padding: 1rem 1.25rem;
-    gap: 0.25rem;
+    padding: 1.25rem 1.25rem 3rem 1.25rem;
+    gap: 0.5rem;
     z-index: 999;
-    transform: translateY(-110%);
-    transition: transform var(--tr-slow);
-    max-height: calc(100vh - var(--nav-h));
+    transform: translateY(-120%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform var(--tr-slow), opacity var(--tr-slow), visibility var(--tr-slow);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     box-shadow: var(--shadow-md);
   }
 
@@ -2378,11 +2393,25 @@ select {
 
   .nav-links.open {
     transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
   }
 
   .nav-link {
-    padding: 0.75rem 1rem;
+    padding: 0.85rem 1rem;
     font-size: 1rem;
+    font-weight: var(--fw-semi);
+    border-bottom: 1px solid var(--clr-border);
+    display: flex;
+    align-items: center;
+  }
+
+  [data-theme="dark"] .nav-link {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .nav-link:last-child {
+    border-bottom: none;
   }
 
   .nav-cta {
@@ -2446,17 +2475,21 @@ select {
 /* Móvil (~480px) */
 @media (max-width: 480px) {
   .logo-name {
-    font-size: 0.8rem;
-    line-height: 1.15;
+    font-size: 0.78rem;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .logo-sub {
-    font-size: 0.62rem;
+    font-size: 0.6rem;
+    white-space: nowrap;
   }
 
   .logo-mark {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
 
   .logo-iq {
