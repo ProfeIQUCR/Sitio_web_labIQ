@@ -2785,6 +2785,74 @@ select {
   letter-spacing: 0.02em;
 }
 
+.image-modal-counter {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: var(--fw-semi);
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.2rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Botones de navegación (flechas) del carrusel en el modal */
+.modal-nav-btn {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 0.75);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  color: var(--clr-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--tr), transform var(--tr), border-color var(--tr);
+  backdrop-filter: blur(4px);
+}
+
+.modal-nav-btn:hover {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.modal-nav-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.modal-nav-prev {
+  left: 0.75rem;
+}
+
+.modal-nav-next {
+  right: 0.75rem;
+}
+
+/* Badge de múltiples fotos en la tarjeta del catálogo */
+.card-photos-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 5;
+  background: rgba(17, 24, 39, 0.85);
+  color: var(--clr-white);
+  font-size: 0.72rem;
+  font-weight: var(--fw-bold);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 @keyframes scaleUp {
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }

@@ -61,16 +61,24 @@ function initDarkMode() {
   });
 }
 
-// ─── MODALES: CIERRE CON TECLA ESCAPE ──────────────────────────────────────────────────────
+// ─── MODALES: TECLAS ESCAPE Y NAVEGACIÓN CON FLECHAS ──────────────────────────────
 function initModalKeyboard() {
   document.addEventListener('keydown', (e) => {
+    const imageModal = document.getElementById('image-modal');
+    const isImageModalOpen = imageModal && imageModal.style.display !== 'none';
+
     if (e.key === 'Escape') {
       const videoModal = document.getElementById('video-modal');
-      const imageModal = document.getElementById('image-modal');
       if (videoModal && videoModal.style.display !== 'none') {
         closeVideoModal();
-      } else if (imageModal && imageModal.style.display !== 'none') {
+      } else if (isImageModalOpen) {
         closeImageModal();
+      }
+    } else if (isImageModalOpen) {
+      if (e.key === 'ArrowLeft') {
+        prevModalImage();
+      } else if (e.key === 'ArrowRight') {
+        nextModalImage();
       }
     }
   });
@@ -502,18 +510,73 @@ function closeVideoModal() {
   document.body.style.overflow = ''; // Restaurar scroll
 }
 
-function openImageModal(imgSrc, imgAlt) {
+let currentModalImages = [];
+let currentModalIndex = 0;
+let currentModalTitle = '';
+
+function openImageModal(imgSrcOrArray, imgAlt, initialIndex = 0) {
   const modal = document.getElementById('image-modal');
   const img = document.getElementById('modal-image');
   const caption = document.getElementById('image-modal-caption');
   if (!modal || !img || !caption) return;
 
-  img.src = imgSrc;
-  img.alt = imgAlt;
-  caption.textContent = imgAlt;
+  // Normalizar imágenes como array
+  currentModalImages = Array.isArray(imgSrcOrArray)
+    ? imgSrcOrArray
+    : (imgSrcOrArray ? [imgSrcOrArray] : []);
+
+  currentModalIndex = initialIndex;
+  currentModalTitle = imgAlt;
+
+  if (currentModalImages.length === 0) return;
+
+  updateModalImageState();
+
   modal.style.display = 'flex';
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+}
+
+function updateModalImageState() {
+  const img = document.getElementById('modal-image');
+  const caption = document.getElementById('image-modal-caption');
+  const prevBtn = document.getElementById('image-modal-prev');
+  const nextBtn = document.getElementById('image-modal-next');
+  const counter = document.getElementById('image-modal-counter');
+
+  if (!img) return;
+
+  img.src = currentModalImages[currentModalIndex];
+  img.alt = currentModalTitle;
+
+  if (caption) {
+    caption.textContent = currentModalTitle;
+  }
+
+  const hasMultiple = currentModalImages.length > 1;
+
+  if (prevBtn) prevBtn.style.display = hasMultiple ? 'flex' : 'none';
+  if (nextBtn) nextBtn.style.display = hasMultiple ? 'flex' : 'none';
+  if (counter) {
+    if (hasMultiple) {
+      counter.style.display = 'inline-block';
+      counter.textContent = `${currentModalIndex + 1} de ${currentModalImages.length}`;
+    } else {
+      counter.style.display = 'none';
+    }
+  }
+}
+
+function prevModalImage() {
+  if (currentModalImages.length <= 1) return;
+  currentModalIndex = (currentModalIndex - 1 + currentModalImages.length) % currentModalImages.length;
+  updateModalImageState();
+}
+
+function nextModalImage() {
+  if (currentModalImages.length <= 1) return;
+  currentModalIndex = (currentModalIndex + 1) % currentModalImages.length;
+  updateModalImageState();
 }
 
 function closeImageModal() {
@@ -531,6 +594,8 @@ window.openVideoModal = openVideoModal;
 window.closeVideoModal = closeVideoModal;
 window.openImageModal = openImageModal;
 window.closeImageModal = closeImageModal;
+window.prevModalImage = prevModalImage;
+window.nextModalImage = nextModalImage;
 
 // ─── CATÁLOGO: FILTROS E INICIALIZACIÓN DE LAB ────────────────────────────────
 const ITEMS_PER_PAGE = 12;
@@ -631,6 +696,13 @@ function renderCatalog() {
       .join('')
       .toUpperCase() || equipo.id.slice(0, 2).toUpperCase();
 
+    // Normalizar imágenes (string o array)
+    const imagesArray = Array.isArray(equipo.img) ? equipo.img : (equipo.img ? [equipo.img] : []);
+    const firstImg = imagesArray[0] || '';
+    const photosBadgeHtml = imagesArray.length > 1
+      ? `<span class="card-photos-badge" title="${imagesArray.length} fotografías disponibles"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> ${imagesArray.length} fotos</span>`
+      : '';
+
     const card = document.createElement('article');
     card.className = 'equipo-card';
     card.dataset.categoria = JSON.stringify(categoriasArray);
@@ -639,13 +711,14 @@ function renderCatalog() {
 
     card.innerHTML = `
       <div class="card-img-wrapper" data-cat="${primaryCat}">
+        ${photosBadgeHtml}
         <div class="card-img-placeholder" aria-hidden="true">
           <svg class="placeholder-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
           <span class="placeholder-text">${initials}</span>
         </div>
         <img
           class="card-img"
-          data-src="${equipo.img}"
+          data-src="${firstImg}"
           alt="${equipo.nombre}"
           decoding="async"
         >
