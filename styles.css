@@ -2366,6 +2366,9 @@ select {
     z-index: 999;
     transform: translateY(-110%);
     transition: transform var(--tr-slow);
+    max-height: calc(100vh - var(--nav-h));
+    overflow-y: auto;
+    box-shadow: var(--shadow-md);
   }
 
   [data-theme="dark"] .nav-links {
@@ -2442,6 +2445,24 @@ select {
 
 /* Móvil (~480px) */
 @media (max-width: 480px) {
+  .logo-name {
+    font-size: 0.8rem;
+    line-height: 1.15;
+  }
+
+  .logo-sub {
+    font-size: 0.62rem;
+  }
+
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+  }
+
+  .logo-iq {
+    font-size: 0.8rem;
+  }
+
   .hero-graphic {
     display: none;
   }
@@ -2477,6 +2498,20 @@ select {
   .catalog-filter-bar-wrapper {
     margin-inline: -1.25rem;
     padding-inline: 1.25rem;
+  }
+
+  /* Carrusel horizontal deslizable para chips de categorías en móvil */
+  .catalog-filter-bar {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .catalog-filter-bar::-webkit-scrollbar {
+    display: none;
   }
 }
 
